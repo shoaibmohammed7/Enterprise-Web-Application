@@ -1,0 +1,82 @@
+<div style="margin: 1em 0">
+  <div style="display: flex;justify-content: space-evenly; margin-bottom: 1em">
+    <div class="stat-card">
+      <ngx-charts-number-card [animations]="true"
+                              [results]="[{'name' : 'Total Customers', 'value' : countStats.totalCustomers}]"
+                              [cardColor]="'#fff'" [bandColor]="'#C6D8D3'" [view]="[200,200]">
+      </ngx-charts-number-card>
+    </div>
+
+    <div class="col-2 stat-card">
+      <ngx-charts-number-card [animations]="true"
+                              [results]="[{'name' : 'Total Products', 'value' : countStats.totalProducts}]"
+                              [cardColor]="'#fff'" [bandColor]="'#F0544F'" [view]="[200,200]">
+      </ngx-charts-number-card>
+    </div>
+
+    <div class="stat-card">
+      <ngx-charts-number-card [animations]="true"
+                              [results]="[{'name' : 'Total Stores', 'value' : countStats.totalStores}]"
+                              [cardColor]="'#fff'" [bandColor]="'#FDF0D5'" [view]="[200,200]">
+      </ngx-charts-number-card>
+    </div>
+    <div class="stat-card">
+      <ngx-charts-number-card [animations]="true"
+                              [results]="[{'name' : 'Total Reviews', 'value' : countStats.totalReviews}]"
+                              [cardColor]="'#fff'" [bandColor]="'#D81E5B'" [view]="[200,200]">
+      </ngx-charts-number-card>
+    </div>
+
+    <div class="stat-card" style="width: 100%">
+      <ngx-charts-advanced-pie-chart
+        [view]="[400,200]" [label]="'Total Orders'" [results]="totalOrdersOverview" [animations]="true">
+      </ngx-charts-advanced-pie-chart>
+    </div>
+  </div>
+
+  <div class="order-line-chart chart-card">
+    <div style="font-size: 1.2em">Orders Trend</div>
+    <div>
+      <ngx-charts-area-chart
+        [view]="[1280,350]" [timeline]="false" [results]="orderTrendData" [gradient]="true" [xAxis]="true"
+        [yAxis]="true" [legend]="false" [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxisLabel]="'Date'"
+        [yAxisLabel]="'Orders'" [showGridLines]="true" [animations]="true">
+      </ngx-charts-area-chart>
+    </div>
+  </div>
+
+
+  <div style="margin-top: 1em; display: flex">
+    <div class="chart-card" style="width: 100%; margin-right: 1em">
+      <div style="font-size: 1.2em">Orders By Pincode</div>
+      <div>
+        <ngx-charts-pie-chart
+          [view]="[400,350]" [legendPosition]="pos" [results]="ordersByPinCode" [gradient]="true"
+          [legend]="true" [animations]="true">
+        </ngx-charts-pie-chart>
+      </div>
+    </div>
+    <div class="chart-card" style="width: 100%; margin-right: 1em">
+      <div style="font-size: 1.2em">Total 10 Products By Review</div>
+      <div>
+
+        <ngx-charts-bar-vertical [view]="[800,350]" [results]="topRatedProducts" [gradient]="true" [xAxis]="false"
+                                 [yAxis]="true" [legend]="false" [showXAxisLabel]="true" [showYAxisLabel]="true" [xAxisLabel]="'Product Name'"
+                                 [yAxisLabel]="'Price'" [showGridLines]="true" [roundEdges]="true" [animations]="true" [noBarWhenZero]="true">
+        </ngx-charts-bar-vertical>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="order-line-chart chart-card">
+    <div style="font-size: 1.2em">Home Hub Sales</div>
+    <div>
+      <ngx-charts-area-chart
+        [view]="[1280,350]" [timeline]="false" [results]="orderSalesTrendData" [gradient]="true" [xAxis]="true"
+        [yAxis]="true" [legend]="false" [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxisLabel]="'Date'"
+        [yAxisLabel]="'Price'" [showGridLines]="true" [animations]="true">
+      </ngx-charts-area-chart>
+    </div>
+  </div>
+</div>

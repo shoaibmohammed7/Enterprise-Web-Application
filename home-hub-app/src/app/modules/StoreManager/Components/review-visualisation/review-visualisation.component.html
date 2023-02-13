@@ -1,0 +1,143 @@
+<div class="card mt-5 p-3">
+  <form [formGroup]="reviewDetails" autocomplete="off">
+    <div class="row mb-2">
+      <div class="col">
+        <label for="prodformName">Product Name</label>
+        <input type="text" class="form-control" id="prodformName" name="prodformName" placeholder="Enter Product Name"
+               (keyup)="getProductSuggestions($event)" formControlName="productName">
+        <div class="productSuggestions list-group" *ngIf="productSuggestions != null" style="width:48%">
+          <div *ngFor="let c of productSuggestions; let i = index">
+            <div *ngIf="i < 4" class="list-group-item" (click)="handleProductSelect(c)">
+              <p style="margin: 0; font-weight: bold;">{{c.name}}</p>
+              <small>{{c.price}}</small>
+            </div>
+          </div>
+        </div>
+        <small class="text-muted">Start typing to see suggestions. Leave blank to see results for all products</small>
+      </div>
+      <div class="col">
+        <div class="row">
+          <div class="col">
+            <label for="prodRating">Rating</label>
+            <select class="form-control" formControlName="rating">
+              <option></option>
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+            </select>
+          </div>
+          <div class="col">
+            <label for="ratingFilter">Select Filter</label>
+            <select formControlName="ratingFilter" class="form-control">
+              <option>Greater Than</option>
+              <option>Equals To</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col">
+        <label for="price">Price</label>
+        <input type="number" class="form-control" formControlName="price" placeholder="Enter Price" step=".01">
+      </div>
+      <div class="col">
+        <label for="priceFilter">Select Filter</label>
+        <select formControlName="priceFilter" class="form-control">
+          <option>Less Than</option>
+          <option>Greater Than</option>
+          <option>Equals To</option>
+        </select>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col">
+        <label for="city">City</label>
+        <input type="text" class="form-control" formControlName="city" placeholder="Enter city">
+      </div>
+      <div class="col">
+        <label for="zipCode">ZIP Code</label>
+        <input type="text" class="form-control" formControlName="zipCode" placeholder="Enter ZIP Code">
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col">
+        <label for="groupBy">Group By</label>
+        <select class="form-control" formControlName="groupBy">
+          <option></option>
+          <option>City</option>
+          <option>Product</option>
+        </select>
+      </div>
+      <div class="col">
+        <label for="groupType">Group Type</label>
+        <select class="form-control" formControlName="groupType">
+          <option>Count</option>
+          <option>Detail</option>
+        </select>
+      </div>
+    </div>
+    <button type="button" id="submitbtn" class="btn btn-primary mt-2" (click)="handleFormClick()">Find
+      Analytics
+    </button>
+  </form>
+</div>
+
+
+<div *ngIf="reviewResp && reviewResp != null">
+  <h4>Review Results</h4>
+
+  <div *ngIf="isArray" class="card">
+    <ng-container [ngTemplateOutlet]="reviewResp.length > 0?reviewTable : empty"
+                  [ngTemplateOutletContext]="{reviews:reviewResp}">
+    </ng-container>
+  </div>
+
+
+  <div *ngIf="!isArray">
+    <div *ngFor="let reviews of reviewResp | keyvalue">
+      <div style="margin-top: 3em; display: flex;">
+        <h6>{{reviews.key}}</h6>
+        <span style="padding-left: 5em" *ngIf="!isInteger(reviews.value)">
+        {{reviews.value}}
+      </span>
+      </div>
+      <ng-container class="card" [ngTemplateOutlet]="isInteger(reviews.value)?reviewTable : empty"
+                    [ngTemplateOutletContext]="{reviews:reviews.value}">
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<ng-template #empty>
+</ng-template>
+
+<ng-template #reviewTable let-reviews="reviews">
+
+  <div class="card">
+    <table class="table  table-striped table-inverse table-responsive">
+      <thead class="thead-inverse">
+      <tr>
+        <th>Username</th>
+        <th>Home Hub Product</th>
+        <th>Rating</th>
+        <th>Review</th>
+        <th>Store</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let re of reviews">
+        <td>{{re.userName}}</td>
+        <td>{{re.groceryName}}</td>
+        <td>{{re.rating}}</td>
+        <td>{{re.review}}</td>
+        <td>{{re.storeName}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+</ng-template>

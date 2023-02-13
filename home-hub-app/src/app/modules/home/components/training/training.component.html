@@ -1,0 +1,14 @@
+
+<div class="show-grocery-body" *ngFor="let video of videoList">
+
+    <div >
+        <h4 class="filter">
+            {{video.title}}
+        </h4>
+    </div>
+    <div class="filter">
+        <iframe  width="1000" height="600" [src]='video.url' frameborder="0" allowfullscreen></iframe>
+
+    </div>
+</div>
+

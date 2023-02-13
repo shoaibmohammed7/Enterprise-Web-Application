@@ -1,0 +1,177 @@
+<div>
+
+  <div style="font-size: 1.4em;font-weight: 500;">
+    <div class="ng-autocomplete">
+      <ng-autocomplete [data]="stores" [searchKeyword]="keyword" placeholder="Store Search"
+        (inputChanged)="onChangeSearch($event)" (selected)="selectedEvent($event)" historyIdentifier="stores"
+        [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate">
+      </ng-autocomplete>
+
+      <ng-template #itemTemplate let-item>
+        <div class="item d-flex">
+          <img src="{{ item.imageUrl }}" height="30" width="50" class="m-2" />
+          <span [innerHTML]="item.name"></span>
+          <!-- <small class="ms-auto">Name: {{ item.name }}</small> -->
+        </div>
+      </ng-template>
+
+      <ng-template #notFoundTemplate let-notFound>
+        <div [innerHTML]="notFound"></div>
+      </ng-template>
+
+    </div>
+  </div>
+  <div class="stores">
+
+    <div class="all-stores">
+
+      <div *ngIf="searched ; else recomendations" style="font-size: 1.4em;font-weight: 500;">Selected Store</div>
+
+      <ng-template #recomendations>
+        <div style="font-size: 1.4em;font-weight: 500;">Nearby Recommended Stores</div>
+      </ng-template>
+
+      <ng-container *ngFor="let st of stores; let i = index">
+        <ng-container [ngTemplateOutlet]="i < 4 ?storeCard : empty" [ngTemplateOutletContext]="{st:st}">
+        </ng-container>
+      </ng-container>
+
+
+      <div style="font-size: 1.4em;font-weight: 500;">All Stores</div>
+      
+      <div *ngFor="let st of allStores; let i = index">
+        <div [ngTemplateOutlet]="i >= 4 ?storeCard : empty" [ngTemplateOutletContext]="{st:st}">
+        </div>
+      </div>
+    </div>
+
+
+    <div *ngIf="stores.length" class="google-maps">
+      <agm-map [latitude]="clat" [longitude]="clon" [zoom]="cZoom">
+        <agm-marker [latitude]="clat" [longitude]="clon">
+          <agm-info-window>You Are here!</agm-info-window>
+        </agm-marker>
+        <agm-circle [latitude]="clat" [longitude]="clon" [radius]="cRadius"></agm-circle>
+
+
+        <ng-container *ngFor="let st of stores; let i = index">
+          <div *ngIf="i<4">
+            <agm-marker [latitude]="st.latitude" [longitude]="st.longitude" animation="BOUNCE"
+              iconUrl="https://img.icons8.com/fluency/48/000000/google-maps-new.png">
+              <agm-info-window [disableAutoPan]="true">
+                <h6>{{st.name}}</h6>
+                <ngb-rating style="color: orange; font-size: 1.5em" [readonly]="true" [max]="5" [rate]="st.rating">
+                </ngb-rating>
+                <div style="font-size: 1em;color: grey">{{st.addressLine1}}</div>
+                <address>{{st.addressLine1}} {{st.addressLine2}}</address>
+              </agm-info-window>
+            </agm-marker>
+          </div>
+          <div *ngIf="i>=4">
+            <agm-marker [latitude]="st.latitude" [longitude]="st.longitude" animation="DROP">
+              <agm-info-window [disableAutoPan]="true">
+                <h6>{{st.name}}</h6>
+                <ngb-rating style="color: orange; font-size: 1.5em" [readonly]="true" [max]="5" [rate]="st.rating">
+                </ngb-rating>
+                <div style="font-size: 1em;color: grey">{{st.displayPhone}}</div>
+                <address>{{st.addressLine1}} {{st.addressLine2}}</address>
+              </agm-info-window>
+            </agm-marker>
+          </div>
+        </ng-container>
+      </agm-map>
+    </div>
+  </div>
+
+
+
+
+  <hr/>
+
+  <div *ngIf="recomendedStores && recomendedStores.length>0">
+    <h5>Similar Service Stores you might like</h5>
+    <br />
+    <div style="flex-wrap: nowrap; overflow-y: scroll" class="row">
+      <div
+        class="col-sm-2"
+        style="margin-bottom: 1rem"
+        *ngFor="let grocery of recomendedStores"
+      >
+        <div>
+          <img
+            [src]="grocery.imageUrl"
+            alt="Avatar"
+            style="width: 105px; height: 105px"
+          />
+          <!-- <div class="details">
+            <div style="font-weight: bold">
+            </div>
+            <div style="font-size: 0.9em; color: grey">{{ grocery.name }}</div>
+          </div> -->
+
+
+
+          <div style="margin-left: 1em; width: 100%">
+            <div style="font-size: 1.4em;font-weight: 500;">{{grocery.name}}</div>
+            <div style="display: flex; justify-content: space-between;width: 100%">
+              <ngb-rating style="color: orange; font-size: 1.5em" [readonly]="true" [max]="5" [rate]="grocery.rating"></ngb-rating>
+      
+              <div style="font-size: 1em; align-items: baseline; color:#0E6EFD">({{grocery.reviewCount}}) reviews</div>
+            </div>
+            <div style="font-size: 1em;color: grey">{{grocery.addressLine1}}</div>
+      
+            <div style="display: flex; justify-content: space-between;width: 100%">
+              <div style="font-size: 1em;color: #0E6EFD">{{grocery.displayPhone}}</div>
+              <div>
+                <button (click)="changeLocation(grocery)" class="btn btn-outline-dark">
+                  <i class="bi bi-geo-alt-fill"></i>
+                  <span style="font-size: 0.9em"> Pick Location</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+
+
+
+        </div>
+      </div>
+    </div>
+
+
+</div>
+
+
+
+
+</div>
+
+<ng-template #empty></ng-template>
+
+<ng-template #storeCard let-st='st'>
+  <div (click)="updateLocation(st)" class="store-card" style="vertical-align:top;">
+    <div>
+      <img style="border-radius: 1em" width="150" height="150" [src]="st.imageUrl">
+    </div>
+
+    <div style="margin-left: 1em; width: 100%">
+      <div style="font-size: 1.4em;font-weight: 500;">{{st.name}}</div>
+      <div style="display: flex; justify-content: space-between;width: 100%">
+        <ngb-rating style="color: orange; font-size: 1.5em" [readonly]="true" [max]="5" [rate]="st.rating"></ngb-rating>
+
+        <div style="font-size: 1em; align-items: baseline; color:#0E6EFD">({{st.reviewCount}}) reviews</div>
+      </div>
+      <div style="font-size: 1em;color: grey">{{st.addressLine1}}</div>
+
+      <div style="display: flex; justify-content: space-between;width: 100%">
+        <div style="font-size: 1em;color: #0E6EFD">{{st.displayPhone}}</div>
+        <div>
+          <button (click)="changeLocation(st)" class="btn btn-outline-dark">
+            <i class="bi bi-geo-alt-fill"></i>
+            <span style="font-size: 0.9em"> Pick Location</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

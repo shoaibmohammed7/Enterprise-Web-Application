@@ -1,0 +1,82 @@
+<ng-container *ngIf="grocery != null">
+  <div class="row" style="justify-content: space-between;">
+    <div class="col-5 mt-5">
+      <img [src]="grocery.imageUrl" alt="Avatar" style="width: 100%; object-fit: contain;">
+    </div>
+    <div class="col-5 mt-5 card">
+      <div style="color: grey;font-size: 0.8em" class="mt-3">{{grocery.category}}</div>
+      <div style="font-weight: bold; margin-top: 0.5em">{{grocery.name}}</div>
+      <ngb-rating [readonly]="true" [max]="5" [rate]="grocery.rating"></ngb-rating>
+      <div *ngIf="grocery.discount != 0" style="margin-top: 1em">
+        <small style="text-decoration: line-through;">$ {{grocery.price}}</small>
+      </div>
+      <div style="font-size:2em;">$ {{(grocery.discount != 0 ? grocery.price - grocery.price / 100 *
+        grocery.discount : grocery.price).toFixed(2)}}</div>
+      <div *ngIf="grocery.discount > 0" style="font-size:0.7em;color: grey">Discount: {{grocery.discount}}%</div>
+      <div style="text-align: start">
+        <button style="border-radius: 10em; margin-top: 1em" class="btn "
+          [class]="(isAddedToCart ? 'btn-success' : 'btn-primary')" (click)="AddToCart(grocery)">
+          {{cartMessage}}</button>
+      </div>
+
+      <hr />
+      <h6 class="text-muted">Product Description</h6>
+      <div>{{grocery.description}}</div>
+    </div>
+  </div>
+  <div style='width:100%; margin:auto; ;padding:1rem; font-size: 14pt; font-weight:bold'
+    class='bg-light col-sm-11 shadow p-3 my-5 bg-white rounded'>
+    <span>
+      Frequently Bought Together
+    </span>
+    <span style='float:right;margin-top:0.3rem'>
+      <i class='fa fa-angle-double-down fa-lg'></i>
+    </span>
+  </div>
+
+  <div>
+    <div style="flex-wrap: nowrap; overflow-y: scroll;" class="row">
+      <div class="col-sm-4" style="margin-bottom:1rem" *ngFor="let r of recomendations">
+        <div class="card text-center" style="height: 30rem; width: 17rem;">
+          <div style="padding : 1rem; height:40%">
+            <img class="card-img-top" [src]="r.imageUrl" alt="" style="height: 10rem; width: 100%; object-fit: contain"
+              loading="lazy">
+          </div>
+          <div class="card-body">
+            <small style="font-weight:bold"></small>
+            <p class="card-title anim"
+              style="font-size:0.9rem; font-weight:500; white-space: normal; text-align: center;">{{r.name}}</p>
+            <p class=" card-text" style="font-weight:bold; font-size:1.5rem;">$ {{r.price}}</p>
+            <button type="button" class="btn btn-primary" (click)="AddToCart(r)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style='width:100%; margin:auto; ;padding:1rem; font-size: 14pt; font-weight:bold'
+    class='bg-light col-sm-11 shadow p-3 my-5 bg-white rounded'>
+    <span>
+      Product reviews
+    </span>
+    <span style='float:right;margin-top:0.3rem'>
+      <i class='fa fa-angle-double-down fa-lg'></i>
+    </span>
+  </div>
+  <div style="width: 50%" class="reviews">
+    <div *ngFor="let r of reviews; let i = index" class="review-card">
+    <div *ngIf="i<5">
+      <div style="display: flex;    align-items: center">
+        <div style="margin-right: 1em">
+          <i style="font-size: 3em" class="bi bi-person-circle"></i>
+        </div>
+        <div style="font-weight: 500; font-size: 1.5em">{{r.userName}}</div>
+      </div>
+      <div>
+        <ngb-rating style="font-size: 1.7em; color: orange;" [readonly]="true" [max]="5" [rate]="r.rating"></ngb-rating>
+      </div>
+      <div>{{r.review}}</div>
+    </div>
+    </div>
+    <hr />
+  </div>
+</ng-container>

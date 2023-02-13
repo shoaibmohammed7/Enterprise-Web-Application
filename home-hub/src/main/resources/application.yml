@@ -1,0 +1,30 @@
+server:
+  port: 9090
+
+grocery-hub:
+  config-path: /development/IIT/CSP-584EWA/Project/grocery-hub/config
+
+
+jwt:
+  secret: grocery-hub
+
+spring:
+  data:
+    mongodb:
+      database: grocery_hub
+      host: localhost
+      port: 27017
+  jpa:
+    generate-ddl: true
+    hibernate.ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/home_hub_db"
+    username: postgres
+    password: root
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 200MB
+      max-request-size: 215MB

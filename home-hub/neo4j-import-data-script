@@ -1,0 +1,16 @@
+WITH "http://192.168.0.8:8080/orders" AS url
+CALL apoc.load.json(url) YIELD value AS orders
+WITH orders, orders.orderedBy AS us, orders.orderDetails AS d
+MERGE (u:User {id:us.id}) ON CREATE SET u.name = us.name, u.email = us.email
+MERGE (od:Order {id:orders.id}) ON CREATE SET od.zipCode = orders.zipCode, od.totalPrice = orders.totalPrice, od.city = orders.city, od.totalPrice=orders.totalPrice, od.orderStatus = orders.orderStatus
+MERGE (u)-[ord:ORDERED]->(od) on CREATE SET ord.purchasedDate = orders.purchasedDate, ord.orderStatus = orders.orderStatus
+with d, od
+unwind d as ordl
+with od,ordl, ordl.grocery as g, ordl.grocery.store as store
+MERGE (ctg:Category {id: g.category}) ON CREATE SET ctg.name = g.category
+MERGE (gc:Grocery {id:g.id}) ON CREATE SET gc.name = g.name, gc.description = g.description, gc.price=g.price, gc.rating=g.rating
+MERGE (gc)-[:BELONGS_TO]->(ctg)
+MERGE (st:Store {id:store.id}) ON CREATE SET st.name = store.name, st.zipCode = store.zipCode,st.rating=store.rating,st.reviewCount=store.reviewCount
+MERGE (gc)-[:AVAILABLE_IN]->(st)
+MERGE (gc)<-[ordlr:ORDER_ITEM]-(od) ON CREATE SET ordlr.price = ordl.price, ordlr.quantity = ordl.quantity
+return count(*)

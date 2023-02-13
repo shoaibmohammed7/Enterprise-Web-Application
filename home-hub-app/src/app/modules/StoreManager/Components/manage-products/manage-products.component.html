@@ -1,0 +1,200 @@
+<div class="container">
+  <h5 class="mt-5">Product Manager</h5>
+  <hr class="mb-3">
+
+
+  <ul ngbNav #nav="ngbNav" class="nav-tabs">
+    <li ngbNavItem>
+      <a ngbNavLink>Add New Home Hub Product</a>
+      <ng-template ngbNavContent>
+
+        <!-- Add New Product -->
+        <div *ngIf="createProductForm" class="mt-3" style="width: 50%" id="newProdForm">
+          <form [formGroup]="createProductForm">
+            <div class="row mt-3">
+              <div class="col">
+                <label for="name">Product Name</label>
+                <input type="text" class="form-control" formControlName="name" placeholder="Enter name">
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col">
+                <label for="name">Product description</label>
+                <input type="text" class="form-control" formControlName="description" placeholder="Enter description">
+              </div>
+            </div>
+
+            <div class="row mt-3">
+
+              <div class="col" formGroupName="store">
+
+                <label for="name">Product Store</label>
+                <select class="form-control" formControlName="id">
+                  <option *ngFor="let st of stores" [value]="st.id">{{st.name}}</option>
+                </select>
+              </div>
+              <div class="col">
+                <label for="price">Available Count</label>
+                <input type="number" class="form-control" formControlName="availableCount"
+                       placeholder="Available Count">
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <div class="col-sm">
+                <label for="parentId">Parent Product Id</label>
+                <input type="text" class="form-control" formControlName="parentId" placeholder="Enter Parent Id">
+                <small id="parentIdHelp" class="form-text text-muted">Enter Parent Product Id to add this product as an
+                  accessory to an existing product.</small>
+              </div>
+              <div class="col">
+                <label for="category">Product Category</label>
+                <select class="form-control" formControlName="category">
+                  <option *ngFor="let cat of category">{{cat}}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <div class="col">
+                <label for="image">Product Image</label>
+                <input type="text" class="form-control" formControlName="imageUrl" placeholder="Enter Image">
+              </div>
+              <div class="col">
+                <label for="price">Product Price</label>
+                <input type="number" class="form-control" formControlName="price" placeholder="Enter Price">
+              </div>
+              <div class="col">
+                <label for="price">Discount</label>
+                <input type="number" class="form-control" formControlName="discount" placeholder="Enter Discount"
+                       step="0.01">
+              </div>
+            </div>
+            <div class="row mt-3 col-2" style="width: 20em">
+              <button id="newProdSubmit" class="btn btn-primary mt-3" (click)="createNewProduct()">Create Product
+              </button>
+            </div>
+          </form>
+          <hr>
+        </div>
+        <!-- Add New product End -->
+
+
+      </ng-template>
+    </li>
+    <li ngbNavItem>
+      <a ngbNavLink>Update Existing Home Hub Products</a>
+      <ng-template ngbNavContent>
+
+        <!-- Search Existing product -->
+        <div class="mt-2" style="width: 50%">
+          <div>
+            <form id="getProductDetails">
+              <div class="row">
+                <div class=" col">
+                  <label for="productId">Product Id</label>
+                  <input type="text" class="form-control" name="pid" id="productId" placeholder="Enter Product Id"
+                         #prodId>
+                  <small id="help" class="form-text text-muted">Products can only be searched by Product Id</small>
+                </div>
+                <div class="col" style="text-align: start; margin: auto;">
+                  <button type="button" class="btn btn-primary" id="submitBtn" (click)="handleGetProduct(prodId.value)">
+                    Get
+                    Product
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <!-- Search Existing product end -->
+
+        <!-- Display searched product -->
+        <div class="mt-2" *ngIf="grocery != null">
+          <div class="card">
+            <div class="row">
+              <div class="col-3" style="margin:auto">
+                <img [src]="grocery.imageUrl" width="100%">
+              </div>
+              <div *ngIf="UpdateProductForm" class="col-8 mt-2" style="margin:auto; width: 50%">
+                <form id="prodForm" style="word-break: break-word" [formGroup]="UpdateProductForm">
+                  <div class="row">
+                    <div class="col-sm">
+                      <label for="name"><small>New product Name</small></label>
+                      <input type="text" class="form-control" formControlName="name"
+                             placeholder="Enter new Product Name">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm">
+                      <label for="name"><small>Description</small></label>
+                      <input type="text" class="form-control" formControlName="description"
+                             placeholder="Enter new Product description">
+                    </div>
+                  </div>
+
+                  <div class="row">
+
+                    <div class="col-sm" formGroupName="store">
+                      <label for="name">Product Store</label>
+                      <select class="form-control" formControlName="id">
+                        <option *ngFor="let st of stores" [value]="st.id">{{st.name}}</option>
+                      </select>
+
+                    </div>
+                    <div class="col">
+                      <label for="price">Available Count</label>
+                      <input type="number" class="form-control" formControlName="availableCount"
+                             placeholder="Available Count">
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-sm">
+                      <label for="imgPath"><small>New Image</small></label>
+                      <input type="text" class="form-control" formControlName="imageUrl"
+                             placeholder="Enter new Image URL">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm">
+                      <label for="Category"><small>New Category</small></label>
+                      <select class="form-control" id="role" formControlName="category">
+                        <option *ngFor="let cat of category">{{cat}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm">
+                      <label for="price"><small>New Price</small></label>
+                      <input type="number" class="form-control" formControlName="price" placeholder="Enter new price">
+                    </div>
+                  </div>
+                  <div class="row" *ngIf="grocery.discount != 0">
+                    <div class="col-sm">
+                      <label for="price"><small>New Discount</small></label>
+                      <input type="number" class="form-control" formControlName="discount"
+                             placeholder="Enter new Discount">
+                    </div>
+                  </div>
+                </form>
+                <button type="button" class="btn btn-danger my-2 ms-3" style="float:right"
+                        (click)="handleProductDelete(grocery.id)">Delete
+                  Product
+                </button>
+                <button type="button" class="btn btn-primary my-2 ms-3" style="float:right" (click)="updateProduct()">
+                  Update
+                  Product
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Display searched product end -->
+
+      </ng-template>
+    </li>
+  </ul>
+  <div [ngbNavOutlet]="nav"></div>
+
+</div>

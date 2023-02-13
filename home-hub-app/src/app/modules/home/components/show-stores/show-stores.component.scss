@@ -1,0 +1,36 @@
+.reco-stores {
+  width: 100%;
+  background: red;
+  height: 10em;
+}
+
+.stores {
+  width: 100%;
+  display: flex;
+  .all-stores {
+    width: 50%;
+    max-height: 50em;
+    overflow-y: scroll;
+    padding: 1em;
+
+    .store-card {
+      width: 100%;
+      border-radius: 1em;
+      box-shadow: 0 0 10px #0000001a;
+      display: flex;
+      padding: 1em;
+      margin: 1em 0em;
+    }
+
+  }
+
+  .google-maps {
+    width: 50%;
+    background: yellow;
+
+    agm-map {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}

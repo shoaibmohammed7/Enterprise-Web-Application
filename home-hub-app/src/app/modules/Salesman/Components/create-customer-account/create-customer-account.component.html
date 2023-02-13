@@ -1,0 +1,33 @@
+<div class="card row mt-5" style="padding:3rem;">
+  <h5>Create Customer Account</h5>
+  <hr />
+  <form id="newUserForm" [formGroup]="customerUser">
+    <div class="form-row mb-3">
+      <div class="col">
+        <label for="name">First / Last Name</label>
+        <input type="text" formControlName="name" class="form-control" placeholder="First name">
+      </div>
+      <div class="col">
+        <label for="email">Email Address</label>
+        <input type="email" formControlName="email" class="form-control" placeholder="email">
+      </div>
+    </div>
+    <div class="form-row mb-3">
+      <div class="col">
+        <label for="password">Password</label>
+        <input type="password" formControlName="password" class="form-control" placeholder="password">
+      </div>
+    </div>
+    <div class="form-row mb-3">
+      <div class="col">
+        <label for="customertype">Customer Type</label>
+        <select class="form-control" formControlName="role">
+          <option>Customer</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="submitBtn" (click)="handleFormSubmit()">Create New User</button>
+  </form>
+  <div style="padding:1rem;text-align: center;" id="createdMessage">
+  </div>
+</div>

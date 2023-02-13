@@ -1,0 +1,29 @@
+.show-grocery-body {
+  margin-top: 1em;
+
+  .filter {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .groceries {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 3.5em;
+    margin-bottom: 2em;
+
+
+    justify-content: center;
+    text-align: center;
+
+    .groc-prod {
+      width: 100%;
+
+      .details {
+        text-align: start;
+        margin-top: 0.5em;
+      }
+
+    }
+  }
+}

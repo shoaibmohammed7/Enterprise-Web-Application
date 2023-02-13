@@ -1,0 +1,110 @@
+<div class="card border-primary mb-2">
+  <form (submit)="handleUpdateOrder($event)">
+    <div class="card-header">
+      <div class="row" style="justify-content:space-between">
+        <div class="row">
+          <div class="col-sm mr-5 ml-4">
+            <small>ORDER PLACED</small>
+            <br />
+            <p>{{getFormattedDate(order.purchasedDate)}}</p>
+          </div>
+          <div class="mr-5 col-sm">
+            <small>TOTAL</small>
+            <br />
+            <p>$ {{Total}}</p>
+          </div>
+          <div class="mr-5 col-sm">
+            <small>SHIP TO</small>
+            <br />
+            <button type="button" class="btn btn-link" style="padding-left:0">
+              {{order.orderedBy.name}}
+            </button>
+          </div>
+          <div class="mr-5 col-sm">
+            <div *ngIf="order.deliveryType =='Home Delivery'">
+              <small>DELIVER TO</small><br />
+              {{order.addressLine1}},
+              <br />
+              {{order.addressLine2}}, {{order.city}}, {{order.state}}, {{order.zipCode}}
+            </div>
+          </div>
+          <div class="mr-5 col-sm">
+            <small>DELIVERY / PICKUP DATE: </small>
+            <br />
+            <div *ngIf="userDetails.role != 'Customer'">
+              <input type="date" name="deliveryDate" class="form-control"
+                [value]="getDeliveryDate(order.deliveryDate)" />
+            </div>
+            <div *ngIf="userDetails.role == 'Customer'">
+              {{getFormattedDate(order.deliveryDate)}}
+            </div>
+          </div>
+          <div class="mr-4 col-sm text-end">
+            <span>ORDER ID: </span>
+            <span><b>{{order.id}}</b></span>
+            <br />
+            <div
+              *ngIf="isCancellationValid(order.deliveryDate) || (userDetails.role != 'Customer' && deliveryAheadOfToday(order.deliveryDate))">
+              <button class="btn btn-link" (click)="deleteOrder(order.id)"><i class="bi bi-trash-fill fs-5"
+                  style="color:red"></i> </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body card-text">
+      <div class='card' *ngFor="let item of order.orderDetails">
+        <div class='card-body'>
+          <div class='row'>
+            <div class='col-md-5 col-lg-2 col-xl-2'>
+              <img class='img-fluid w-100' [src]="item.grocery.imageUrl" alt='productImg'>
+            </div>
+            <div class='col-md-7 col-lg-9 col-xl-9'>
+              <div style='height:90%'>
+                <div class='d-flex justify-content-between'>
+                  <div class='mr-3'>
+                    <button class="btn btn-link" [routerLink]="['/home/grocery/' + item.grocery.id]"
+                      style="padding-left:0">{{item.grocery.name}}</button>
+                    <p class='mb-3 text-muted text-uppercase small'>Category: {{item.grocery.category}} </p>
+                    <p class='mb-3 text-muted text-uppercase small'>Sold By: Home Hub</p>
+                    <p class='mb-3 text-muted text-uppercase small'>Delivery Type:
+                      <span style='color:#05b305'>
+                        {{order.deliveryType}}
+                      </span>
+                    </p>
+                    <p class='mb-3 text-muted text-uppercase small' *ngIf="order.deliveryType == 'In-Store Pickup'">
+                      Store
+                      Address: <span
+                        style='color:#05b305; font-size:small'>{{order.orderDetails[0].grocery.store.addressLine1}},&nbsp;
+                        {{order.orderDetails[0].grocery.store.addressLine2}}</span>
+                    </p>
+
+                    <p class='mb-3 text-muted text-uppercase small'>Payment: {{order.paymentMethod}}
+                      {{order.cardHolderName}}<i>({{order.cardNumber.substring(order.cardNumber.length - 4)}})
+                      </i></p>
+                  </div>
+                  <div>
+                    <div>
+                      <p style='text-align:end; font-weight:200'><span
+                          style='font-weight:400'>Quantity</span><br>{{item.quantity}}<br />
+                        <button
+                          *ngIf="isCancellationValid(order.deliveryDate) || (userDetails.role != 'Customer' && deliveryAheadOfToday(order.deliveryDate))"
+                          class="btn btn-link pe-0" (click)="deleteOrderItem(item.id, order.id)"><i
+                            class="bi bi-trash-fill" style="color:red"></i>
+                        </button>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="userDetails.role != 'Customer'" class="text-end mt-2">
+        <button class="btn btn-warning" type="submit">Update Order</button>
+      </div>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,139 @@
+<div *ngFor="let rat of ratings">
+
+    <div class="show-grocery-body">
+        <h4 class="filter">
+            {{rat.name}}
+        </h4>
+
+
+        <table mat-table [dataSource]="rat.data" multiTemplateDataRows class="mat-elevation-z8">
+            <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
+                <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+                <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+            </ng-container>
+            <ng-container matColumnDef="expand">
+                <th mat-header-cell *matHeaderCellDef aria-label="row actions">&nbsp;</th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-icon-button aria-label="expand row"
+                        (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation()">
+                        <mat-icon *ngIf="expandedElement !== element">keyboard_arrow_down</mat-icon>
+                        <mat-icon *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="expandedDetail">
+                <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
+                    <div class="example-element-detail"
+                        [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                        <div class="example-element-description">
+                            <div>
+                                <img (click)="viewGrocery(element.id)" [src]="element.imageUrl" alt="Avatar"
+                                    style="width: 105px; height: 105px" />
+                                <div class="details">
+                                    <div style="font-weight: bold">
+                                        <span *ngIf="element.discount != 0">
+                                            <i style="
+                            text-decoration: line-through;
+                            font-weight: 300 !important;
+                          ">$ {{ element.price }}</i>
+                                        </span>
+                                        ${{
+                                        (element.discount != 0
+                                        ? element.price - (element.price / 100) * element.discount
+                                        : element.price
+                                        ).toFixed(2)
+                                        }}
+                                    </div>
+                                    <div style="font-size: 0.9em; color: grey">{{ element.name }}</div>
+                                    <div *ngIf="element.discount > 0" style="font-size: 0.7em; color: grey">
+                                        Discount: {{ element.discount }}%
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between">
+                                        <ngb-rating [readonly]="true" [max]="5" [rate]="element.rating"></ngb-rating>
+                                        <button style="border-radius: 10em" class="btn btn-primary"
+                                            (click)="AddToCart(element, $event)">
+                                            Add +
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{element.description}}
+                        </div>
+                    </div>
+                </td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
+            <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand;" class="example-element-row"
+                [class.example-expanded-row]="expandedElement === element"
+                (click)="expandedElement = expandedElement === element ? null : element">
+            </tr>
+            <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+        </table>
+
+    </div>
+
+</div>
+
+<div>
+
+    <div class="show-grocery-body">
+        <h4 class="filter">
+            Most Sold Products
+        </h4>
+    </div>
+
+<table mat-table [dataSource]="topProductsBysale" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="count">
+        <th mat-header-cell *matHeaderCellDef> Count </th>
+        <td mat-cell *matCellDef="let element"> {{element.count}} </td>
+    </ng-container>
+
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>
+
+</div>
+
+<div>
+
+    <div class="show-grocery-body">
+        <h4 class="filter">
+            Most Sold Product by ZIPcode
+        </h4>
+    </div>
+
+
+<table mat-table [dataSource]="topProductsByZip" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="count">
+        <th mat-header-cell *matHeaderCellDef> Count </th>
+        <td mat-cell *matCellDef="let element"> {{element.count}} </td>
+    </ng-container>
+
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>
+
+
+
+</div>

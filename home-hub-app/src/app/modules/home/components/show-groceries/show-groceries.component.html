@@ -1,0 +1,236 @@
+<div class="show-grocery-body"  >
+  <div class="filter">
+    <div ngbDropdown class="d-inline-block">
+      <div class="btn-group" ngbDropdown role="group">
+        <button style="border-radius: 10em" class="btn btn-sm btn-outline-primary" ngbDropdownToggle>
+          Categories
+        </button>
+        <div class="dropdown-menu" ngbDropdownMenu>
+          <button ngbDropdownItem (click)="searchByCategory('')">
+            All Categories
+          </button>
+          <div *ngFor="let cat of categories">
+            <button ngbDropdownItem (click)="searchByCategory(cat)">
+              {{ cat }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-left: 1em" class="btn-group" ngbDropdown role="group">
+        <button style="border-radius: 10em" class="btn btn-sm btn-outline-primary" ngbDropdownToggle>
+          Sort By
+        </button>
+        <div class="dropdown-menu" ngbDropdownMenu>
+          <button ngbDropdownItem (click)="sortBy('desc')">
+            Price: High to Low
+          </button>
+          <button ngbDropdownItem (click)="sortBy('asc')">
+            Price: Low to High
+          </button>
+        </div>
+      </div>
+
+      <div style="margin-left: 1em" class="btn-group" ngbDropdown role="group">
+        <button style="border-radius: 10em" class="btn btn-sm btn-outline-primary" ngbDropdownToggle>
+          Rating
+        </button>
+        <div class="dropdown-menu" ngbDropdownMenu>
+          <button ngbDropdownItem (click)="rating(0)">Clear Filter</button>
+          <div *ngFor="let rate of [4, 3, 2, 1]">
+            <button ngbDropdownItem (click)="rating(rate)">
+              <ngb-rating [readonly]="true" [max]="5" [rate]="rate"></ngb-rating>
+              <span style="font-size: 0.8em; color: gray"> & up</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-left: 1em" class="btn-group" ngbDropdown role="group">
+        <button style="border-radius: 10em" class="btn btn-sm btn-outline-primary" ngbDropdownToggle>
+          Special Discounts
+        </button>
+        <div class="dropdown-menu" ngbDropdownMenu>
+          <button ngbDropdownItem (click)="discounts(0)">Clear Filter</button>
+          <div *ngFor="let rate of [10, 30, 50, 60, 70]">
+            <button ngbDropdownItem (click)="discounts(rate)">
+              {{ rate }}%
+              <span style="font-size: 0.8em; color: gray"> & up</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-left: 1em" class="btn-group" role="group">
+        <button (click)="showRatings()" style="border-radius: 10em" class="btn btn-sm btn-outline-primary">
+          Trending
+        </button>
+      </div>
+      <div style="margin-left: 1em" class="btn-group" role="group">
+        <button (click)="showTraining()" style="border-radius: 10em" class="btn btn-sm btn-outline-primary">
+          Training
+        </button>
+      </div>
+
+    </div>
+  </div>
+  <hr />
+  <div>
+    <h5>Recently Added</h5>
+    <br />
+    <div style="flex-wrap: nowrap; overflow-y: scroll" class="row">
+      <div class="col-sm-2" style="margin-bottom: 1rem" *ngFor="let grocery of recentlyAdded">
+        <div>
+          <img (click)="viewGrocery(grocery.id)" [src]="grocery.imageUrl" alt="Avatar"
+            style="width: 105px; height: 105px" />
+          <div class="details">
+            <div style="font-weight: bold">
+              <span *ngIf="grocery.discount != 0">
+                <i style="
+                    text-decoration: line-through;
+                    font-weight: 300 !important;
+                  ">$ {{ grocery.price }}</i>
+              </span>
+              ${{
+              (grocery.discount != 0
+              ? grocery.price - (grocery.price / 100) * grocery.discount
+              : grocery.price
+              ).toFixed(2)
+              }}
+            </div>
+            <div style="font-size: 0.9em; color: grey">{{ grocery.name }}</div>
+            <div *ngIf="grocery.discount > 0" style="font-size: 0.7em; color: grey">
+              Discount: {{ grocery.discount }}%
+            </div>
+            <div style="display: flex; justify-content: space-between">
+              <ngb-rating [readonly]="true" [max]="5" [rate]="grocery.rating"></ngb-rating>
+              <button style="border-radius: 10em" class="btn btn-primary" (click)="AddToCart(grocery, $event)">
+                Add +
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr />
+  <div class="groceries">
+    <div *ngIf="groceries?.length <= 0">
+      <img width="300px"
+        src="https://cdn.dribbble.com/users/1554526/screenshots/3399669/media/2d879bb686624e2c2e4708f00d3e51ab.png" />
+      <p class="shineText">Finding the nearest store</p>
+      <div>
+        <div class="snippet" data-title=".dot-revolution">
+          <div class="stage" style="margin-left: calc(50%); margin-top: 3rem">
+            <div class="dot-revolution"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngFor="let grocery of groceries" class="groc-prod">
+      <div>
+        <img (click)="viewGrocery(grocery.id)" [src]="grocery.imageUrl" alt="Avatar"
+          style="width: 255px; height: 255px" />
+        <div class="details">
+          <div style="font-weight: bold">
+            <span *ngIf="grocery.discount != 0">
+              <i style="
+                  text-decoration: line-through;
+                  font-weight: 300 !important;
+                ">$ {{ grocery.price }}</i>
+            </span>
+            ${{
+            (grocery.discount != 0
+            ? grocery.price - (grocery.price / 100) * grocery.discount
+            : grocery.price
+            ).toFixed(2)
+            }}
+          </div>
+          <div style="font-size: 0.9em; color: grey">{{ grocery.name }}</div>
+          <div *ngIf="grocery.discount > 0" style="font-size: 0.7em; color: grey">
+            Discount: {{ grocery.discount }}%
+          </div>
+          <div style="display: flex; justify-content: space-between">
+            <ngb-rating [readonly]="true" [max]="5" [rate]="grocery.rating"></ngb-rating>
+            <button style="border-radius: 10em" class="btn btn-primary" (click)="AddToCart(grocery, $event)">
+              Add +
+            </button>
+          </div>
+          <div>
+            <a style="color: #0e6efd" class="btn" (click)="openReviewModal(writeReview, grocery.id)">
+              Write Review
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr />
+
+  <div *ngIf="recomendations && recomendations.length>0">
+    <h5>Similar products you might like</h5>
+    <br />
+    <div style="flex-wrap: nowrap; overflow-y: scroll" class="row">
+      <div class="col-sm-2" style="margin-bottom: 1rem" *ngFor="let grocery of recomendations">
+        <div>
+          <img (click)="viewGrocery(grocery.id)" [src]="grocery.imageUrl" alt="Avatar"
+            style="width: 105px; height: 105px" />
+          <div class="details">
+            <div style="font-weight: bold">
+              <span *ngIf="grocery.discount != 0">
+                <i style="
+                    text-decoration: line-through;
+                    font-weight: 300 !important;
+                  ">$ {{ grocery.price }}</i>
+              </span>
+              ${{
+              (grocery.discount != 0
+              ? grocery.price - (grocery.price / 100) * grocery.discount
+              : grocery.price
+              ).toFixed(2)
+              }}
+            </div>
+            <div style="font-size: 0.9em; color: grey">{{ grocery.name }}</div>
+            <div *ngIf="grocery.discount > 0" style="font-size: 0.7em; color: grey">
+              Discount: {{ grocery.discount }}%
+            </div>
+            <div style="display: flex; justify-content: space-between">
+              <ngb-rating [readonly]="true" [max]="5" [rate]="grocery.rating"></ngb-rating>
+              <button style="border-radius: 10em" class="btn btn-primary" (click)="AddToCart(grocery, $event)">
+                Add +
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+  <ng-template #writeReview let-modal>
+    {{ modal.centered }}
+    <div class="modal-header bg-light">
+      Write a review
+      <i class="bi bi-x-diamond-fill" (click)="closeModals()" style="cursor: pointer"></i>
+    </div>
+    <form [formGroup]="reviewForm" (ngSubmit)="onWriteReview()">
+      <div class="modal-body" style="padding: 0 !important">
+        <div style="width: 100%; padding: 3em; float: left">
+          <div>
+            <ngb-rating style="font-size: 2em; color: orange" [max]="5" [rate]="1" formControlName="rating">
+            </ngb-rating>
+            <div style="margin-top: 3em" class="form-group">
+              <textarea class="form-control" formControlName="review" placeholder="Write Review"></textarea>
+            </div>
+            <button style="border-radius: 10em; margin-top: 2em" class="btn btn-primary">
+              Submit Review
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+
+</div>

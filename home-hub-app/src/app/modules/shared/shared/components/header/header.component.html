@@ -1,0 +1,232 @@
+<script src="../../../../home/components/show-stores/show-stores.component.ts"></script>
+<div>
+  <div class="row bg-primary p-2">
+    <div class="col-sm" [routerLink]="['/home']" style="
+        cursor: pointer;
+        font-size: x-large;
+        color: white;
+        font-weight: 800;
+      ">
+       <p   height="50" width="60"   style="margin: 0; padding: 0; padding-left: 7rem; align-content: center;">Home Hub</p> 
+      
+    </div>
+
+    <div class="col-sm">
+      <div class="ng-autocomplete">
+        <ng-autocomplete [data]="groceryList" [searchKeyword]="keyword" placeholder="Home Hub Search"
+          (inputChanged)="onChangeSearch($event)" (selected)="selectedEvent($event)" historyIdentifier="groceryList"
+          [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate">
+        </ng-autocomplete>
+
+        <ng-template #itemTemplate let-item>
+          <div class="item d-flex">
+            <img src="{{ item.imageUrl }}" height="30" width="50" class="m-2" />
+            <span [innerHTML]="item.name"></span>
+            <small class="ms-auto">Category: {{ item.category }}</small>
+          </div>
+        </ng-template>
+
+        <ng-template #notFoundTemplate let-notFound>
+          <div [innerHTML]="notFound"></div>
+        </ng-template>
+      </div>
+    </div>
+
+    <div class="col-sm">
+      <div class="row" style="justify-content: flex-end">
+        <div class="col-4">
+          <button [routerLink]="['/home/stores']" class="btn btn-warning" style="color: white; width: 100%">
+            <div style="font-size: 0.9em; color: black">
+              <i style="font-size: 1.2em" class="bi bi-geo-alt-fill"></i>
+              {{ nearByStore?.name }}
+            </div>
+          </button>
+        </div>
+        <div class="col-4">
+          <div *ngIf="isLoggedIn">
+            <div ngbDropdown class="d-inline-block">
+              <button class="btn btn-outline-dark" style="color: white" id="dropdownBasic1" ngbDropdownToggle>
+                <i class="bi bi-person-circle"></i>
+                <span style="font-size: 0.9em"> {{userDetails.name}}</span>
+              </button>
+              <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <button *ngFor="let link of hyperlinks[userDetails.role]" ngbDropdownItem [routerLink]="link.link">
+                  {{link.name}}
+                </button>
+                <button ngbDropdownItem (click)="logout()">Logout</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-3">
+          <button *ngIf="isLoggedIn" class="btn btn-outline-dark" [routerLink]="['/home/cart']" style="color: white; margin-left: 2em;">
+            <i style="font-size: 1.2em" class="bi bi-cart"></i>
+          </button>
+          <div *ngIf="!isLoggedIn">
+            <button class="btn btn-primary" (click)="open(login)">
+              <span style="font-size: 0.9em">Login</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <ng-template #login let-modal>
+    <div class="modal-header">
+      Home Hub
+      <i class="bi bi-x-diamond-fill" (click)="closeModals()" style="cursor: pointer"></i>
+    </div>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="modal-body" style="padding: 0 !important; height: 25rem">
+        <div style="width: 40%; color: white; float: left; height: 25rem" class="bg-primary">
+          <div style="
+              display: flex;
+              flex-direction: column;
+              justify-content: space-evenly;
+              padding: 2rem;
+            ">
+            <div>
+              <h3 style="padding: 1rem">Login</h3>
+            </div>
+            <div>
+              <p style="padding: 1rem">
+                <small>Login to access all exclusive deals and much more...</small>
+              </p>
+            </div>
+            <div style="text-align: center">
+              <!-- <img src="/HW1/images/logo.png" width="50%"> -->
+            </div>
+          </div>
+        </div>
+        <div style="width: 60%; float: left">
+          <div style="padding: 5rem 2rem 4rem 2rem">
+            <div class="form-group">
+              <label for="username">Email address</label>
+              <input type="email" class="form-control" id="username" name="username" formControlName="username"
+                aria-describedby="emailHelp" placeholder="Enter email" [ngClass]="{
+                  'is-invalid':
+                    loginForm.get('username')!.errors &&
+                    loginForm.get('username')!.touched
+                }" />
+              <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" class="form-control" name="password" formControlName="password"
+                placeholder="Password" [ngClass]="{
+                  'is-invalid':
+                    loginForm.get('password')!.errors &&
+                    loginForm.get('password')!.touched
+                }" />
+            </div>
+            <div id="loginMessage" style="text-align: center"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+        <input type="submit" class="btn btn-primary" value="Login" />
+        <br />
+        <p class="signupFromlogin" style="cursor: pointer" (click)="openSignUpModal(signup)">
+          <small>Not a user? Sign Up</small>
+        </p>
+      </div>
+    </form>
+  </ng-template>
+
+  <!-- Login modal End -->
+
+  <!-- Signup Modal -->
+  <ng-template #signup let-modal>
+    <div class="modal-header">
+      Home Hub
+      <i class="bi bi-x-diamond-fill" (click)="closeModals()" style="cursor: pointer"></i>
+    </div>
+    <div class="modal-body" style="padding: 0 !important; height: 26rem">
+      <div style="width: 40%; color: white; float: left; height: 26rem" class="bg-primary">
+        <div style="
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            padding: 2rem;
+          ">
+          <div>
+            <h3 style="padding: 1rem">Looks like you're new here !</h3>
+          </div>
+          <div>
+            <p style="padding: 1rem">
+              <small>Sign up with our email to get Started...</small>
+            </p>
+          </div>
+          <div style="text-align: center">
+            <!-- <img src="/HW1/images/logo.png" width="50%"> -->
+          </div>
+        </div>
+      </div>
+      <div style="width: 60%; float: left; height: 26rem; overflow-y: scroll">
+        <div style="padding: 0.1rem 1rem 0.1rem 1rem">
+          <form [formGroup]="signupForm">
+            <div class="form-group p-2">
+              <label for="name">Name</label>
+              <input type="text" class="form-control" formControlName="name" id="name" placeholder="First / Last Name"
+                [ngClass]="{
+                  'is-invalid':
+                    signupForm.get('name')!.errors &&
+                    signupForm.get('name')!.touched
+                }" />
+            </div>
+            <div class="form-group p-2">
+              <label for="email">Email address</label>
+              <input type="email" class="form-control" formControlName="email" id="email" aria-describedby="emailHelp"
+                placeholder="Enter email" [ngClass]="{
+                  'is-invalid':
+                    signupForm.get('email')!.errors &&
+                    signupForm.get('email')!.touched
+                }" />
+            </div>
+            <div class="form-group p-2">
+              <label for="password1">Password</label>
+              <input type="password" class="form-control" formControlName="password" id="password1"
+                placeholder="Password" [ngClass]="{
+                  'is-invalid':
+                    signupForm.get('password')!.errors &&
+                    (signupForm.get('password')!.touched ||
+                      signupForm.get('password')!.dirty)
+                }" />
+            </div>
+            <div class="form-group p-2">
+              <label for="password2">Re type Password</label>
+              <input type="password" class="form-control" formControlName="password2" id="password2"
+                placeholder="Re-Type Password" [ngClass]="{
+                  'is-invalid':
+                    signupForm.get('password')!.errors &&
+                    signupForm.get('password')!.touched
+                }" />
+            </div>
+            <div class="form-group p-2">
+              <label for="role">User Type</label>
+              <select class="form-control" id="role" formControlName="role">
+                <option selected="true">Customer</option>
+                <option>Salesman</option>
+                <option>Store Manager</option>
+              </select>
+            </div>
+          </form>
+          <div style="margin: auto; text-align: center">
+            <div id="registratonMessage"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+      <input type="submit" class="btn btn-primary" id="signupBtn" value="Register" (click)="submitSignup()" />
+      <p class="loginFromSignup" style="cursor: pointer" (click)="openLoginModal(login)">
+        <small>Existing User?</small>
+      </p>
+    </div>
+  </ng-template>
+  <!-- Signup Modal End -->
+</div>

@@ -1,0 +1,53 @@
+.toolbar {
+  display: flex;
+  background: #0d6efd;
+  justify-content: space-between;
+  padding: 0.7em;
+
+  .logo {
+    color: white;
+    font-size: 1.5em;
+    margin: 0.2em 0 0.2em 1em;
+  }
+
+  .toolbar-end {
+    display: flex;
+    align-items: center;
+    margin-right: 1em;
+    width: 88%;
+    justify-content: start;
+
+    .item {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      white-space: nowrap;
+      line-height: 45px;
+      height: 45px;
+      padding: 0 16px;
+      text-align: left;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
+    .searchbar {
+      width: 100%;
+      justify-content: center;
+      display: flex;
+    }
+
+    .user-opt {
+      display: flex;
+    }
+  }
+  .searchBarResults {
+    position: absolute;
+    z-index: 1;
+    height: 15rem;
+    overflow-y: scroll;
+    cursor: pointer;
+    padding: inherit;
+    padding-left: 0;
+    width: 32%;
+  }
+}
