@@ -16,8 +16,6 @@ The project has 3 folders:
 3. node_modules
 	This folder consists of every installed dependency required for our project.
 
-**********************************************************************
-Lines of Code:134007
 
 **********************************************************************
 Features Implemented:
