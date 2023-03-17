@@ -36,7 +36,7 @@ Services Recommendations based on search and location
 **********************************************************************
 Running of the Application
 # To install packages
-npm i
+npm install
 # To startup the server
 npm start
 http://localhost:4200/ to access the project
